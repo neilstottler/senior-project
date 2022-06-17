@@ -17,7 +17,7 @@ BASE = "http://127.0.0.1:5000/"
 #print(response.json())
 
 #global token_value
-#token_value = "global token"
+token_value = "global token"
 
 #what the fuck 
 class TokenValue:
@@ -29,6 +29,10 @@ class TokenValue:
 
 class TheToken:
     token_value = "token"
+
+
+def myFuckingToken(token):
+    token_value = "global token"
 
 
 class tkinterApp(tk.Tk):
@@ -91,6 +95,7 @@ class Login(tk.Frame):
         password_box.grid(column=1, row=2)
 
         #response = requests.post(BASE + "login", {'username':'neil', 'password':'password'})
+        global token_value
         def login_clicked():
             username = username_box.get()
             password = password_box.get()
@@ -98,15 +103,10 @@ class Login(tk.Frame):
             response = requests.post(BASE + "login", {'username':username, 'password':password})
             print(response.json())
             token_text.configure(text=response.json())
-            #global token_value
-            #token_value = response.json()
+            global token_value
+            token_value = response.json()
+            print("TOKEN VALUE" + str(token_value))
 
-            #p1 = TokenValue(response.json())
-
-            #print(p1.token)
-            token_thing = TheToken()
-            TheToken.token_value = response.json()
-            print(TheToken.token_value)
 
 
 
@@ -222,8 +222,10 @@ class SubmitData(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         token_thing = TheToken()
+        global token_value
 
-        token_text = Label(self, text=f"Entering data with token: {TheToken.token_value}")
+
+        token_text = Label(self, text=f"Entering data with token: {token_value}")
         token_text.grid(column=1, row=0)
 
 
