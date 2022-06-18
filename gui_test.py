@@ -68,25 +68,8 @@ class Login(tk.Frame):
     def __init__(self, parent, controller):
 
         tk.Frame.__init__(self, parent)
-        self.pageElemets(controller)
+        #self.pageElemets(controller)
 
-    def login_clicked(controller, username_box, password_box, token_text):
-            username = username_box.get()
-            password = password_box.get()
-
-            response = requests.post(BASE + "login", {'username':username, 'password':password})
-            print(response.json())
-            token_text.configure(text=response.json())
-            token_value = response.json()
-            print("TOKEN VALUE: " + str(token_value))
-
-
-            controller.show_frame(SubmitData)
-            #self.state(newstate='iconic')
-            #main()
-            return
-
-    def pageElemets(self, controller):
         login_label = Label(self, text="Login")
         login_label.grid(column=1, row=0)
 
@@ -103,15 +86,6 @@ class Login(tk.Frame):
         password_box.grid(column=1, row=2)
 
     #needs username_box password_box token_text controller
-        def wtf():
-            login_clicked()
-
-
-        login_button = Button(self, text="Login", command= login_clicked(controller, username_box, password_box, token_text))
-        login_button.grid(column=1, row=3)
-
-        login_create_account_button = Button(self, text="Create Account", command= lambda : controller.show_frame(CreateAccount))
-        login_create_account_button.grid(column=1, row=4)
 
         #token box
         token_label = Label(self, text="Token: ")
@@ -120,7 +94,32 @@ class Login(tk.Frame):
         #this is the text we change for the token
         token_text = Label(self, text="No Token")
         token_text.grid(column=1, row=5)
-        pass
+
+
+        def login_clicked():
+            username = username_box.get()
+            password = password_box.get()
+
+            response = requests.post(BASE + "login", {'username':username, 'password':password})
+            print(response.json())
+            token_text.configure(text=response.json())
+            
+            #global token_value
+            token_value = response.json()
+            print("TOKEN VALUE: " + str(token_value))
+
+
+            controller.show_frame(SubmitData)
+            #self.state(newstate='iconic')
+            #main()
+
+        login_button = Button(self, text="Login", command= login_clicked)
+        login_button.grid(column=1, row=3)
+
+        login_create_account_button = Button(self, text="Create Account", command= lambda : controller.show_frame(CreateAccount))
+        login_create_account_button.grid(column=1, row=4)
+
+    
 
 # second window frame page1
 class CreateAccount(tk.Frame):
@@ -220,5 +219,6 @@ class SubmitData(tk.Frame):
 
 
 # Driver Code
-app = tkinterApp()
-app.mainloop()
+if __name__ == "__main__":
+    app = tkinterApp()
+    app.mainloop()
