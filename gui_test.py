@@ -19,21 +19,6 @@ BASE = "http://127.0.0.1:5000/"
 #global token_value
 token_value = "global token"
 
-#what the fuck 
-class TokenValue:
-    def __init__(self, token):
-        self.token = token
-
-    def giveToken(self):
-        return self.token
-
-class TheToken:
-    token_value = "token"
-
-
-def myFuckingToken(token):
-    token_value = "global token"
-
 
 class tkinterApp(tk.Tk):
     # __init__ function for class tkinterApp
@@ -77,8 +62,31 @@ class tkinterApp(tk.Tk):
         frame.tkraise()
 
 class Login(tk.Frame):
+
+    global token_value
+
     def __init__(self, parent, controller):
+
         tk.Frame.__init__(self, parent)
+        self.pageElemets(controller)
+
+    def login_clicked(controller, username_box, password_box, token_text):
+            username = username_box.get()
+            password = password_box.get()
+
+            response = requests.post(BASE + "login", {'username':username, 'password':password})
+            print(response.json())
+            token_text.configure(text=response.json())
+            token_value = response.json()
+            print("TOKEN VALUE: " + str(token_value))
+
+
+            controller.show_frame(SubmitData)
+            #self.state(newstate='iconic')
+            #main()
+            return
+
+    def pageElemets(self, controller):
         login_label = Label(self, text="Login")
         login_label.grid(column=1, row=0)
 
@@ -94,28 +102,12 @@ class Login(tk.Frame):
         password_box = Entry(self, show="*", width=20)
         password_box.grid(column=1, row=2)
 
-        #response = requests.post(BASE + "login", {'username':'neil', 'password':'password'})
-        global token_value
-        def login_clicked():
-            username = username_box.get()
-            password = password_box.get()
-
-            response = requests.post(BASE + "login", {'username':username, 'password':password})
-            print(response.json())
-            token_text.configure(text=response.json())
-            global token_value
-            token_value = response.json()
-            print("TOKEN VALUE" + str(token_value))
+    #needs username_box password_box token_text controller
+        def wtf():
+            login_clicked()
 
 
-
-
-            controller.show_frame(SubmitData)
-            #self.state(newstate='iconic')
-            #main()
-            
-
-        login_button = Button(self, text="Login", command=login_clicked)
+        login_button = Button(self, text="Login", command= login_clicked(controller, username_box, password_box, token_text))
         login_button.grid(column=1, row=3)
 
         login_create_account_button = Button(self, text="Create Account", command= lambda : controller.show_frame(CreateAccount))
@@ -128,12 +120,11 @@ class Login(tk.Frame):
         #this is the text we change for the token
         token_text = Label(self, text="No Token")
         token_text.grid(column=1, row=5)
-
-
+        pass
 
 # second window frame page1
 class CreateAccount(tk.Frame):
-     
+    
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
@@ -221,7 +212,6 @@ class SubmitData(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        token_thing = TheToken()
         global token_value
 
 
