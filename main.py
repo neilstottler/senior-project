@@ -5,13 +5,13 @@ from datetime import datetime
 
 #local
 from utils import Password, Token, CreateAccounts
-from models import Users
-from models import Authentication
+from models import Users, Authentication, Levels
 
 now = datetime.now()
 
 authDB = Authentication()
 usersDB = Users()
+levelsDB = Levels()
 
 app = Flask(__name__)
 api = Api(app)
@@ -51,6 +51,9 @@ authentication_fields = {
     'user_id': fields.Integer,
     'token': fields.String
 }
+
+class Level(Resource):
+    pass
 
 class Login(Resource):
     #@marshal_with(user_fields)
@@ -147,6 +150,7 @@ class CreateAccount(Resource):
 
 api.add_resource(Login, "/login")
 api.add_resource(CreateAccount, "/createaccount")
+api.add_resource(Level, "/level")
 
 if __name__ == "__main__":
     app.run(debug=True)
