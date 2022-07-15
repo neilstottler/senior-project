@@ -57,3 +57,9 @@ class Authentication:
                 return True
         except:
             return "Invalid Token"
+
+    #get user id with token
+    def getUserIdWithToken(self, token):
+        self.cur.execute("""SELECT user_id FROM auth WHERE token=(?) AND date_expired IS NULL""", (token,))
+        rows = self.cur.fetchone()
+        return rows

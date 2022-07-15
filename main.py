@@ -55,21 +55,24 @@ authentication_fields = {
 class Level(Resource):
     pass
 
+class User(Resource):
+    
+    def post(self):
+        token = request.form.get('token')
+        #need to use token to get user ID
+        #check if token is valid
+
+        #check if token is expired
+        if (authDB.expiredToken(token) == False):
+            #return id if it is
+            user_id = authDB.getUserIdWithToken(token)
+            return user_id
+
+        #expired token
+        else:
+            return 404
+
 class Login(Resource):
-    #@marshal_with(user_fields)
-    def get(self):
-        return {"Error": "You're not supposed to be here."}
-
-    #@marshal_with(user_fields)
-    def put(self):
-        return 404
-
-    #@marshal_with(user_fields)
-    def patch(self):
-        return 404
-
-    def delete(self):
-        return 204
 
     def post(self):
         username = request.form.get('username')
@@ -79,11 +82,9 @@ class Login(Resource):
             
             #get the user ID
             user_id = usersDB.id(username)
-            print("USER ID: "+ str(user_id))
 
             #check if there is an old token
             old_token = authDB.tokenCheck(user_id[0])
-            print("OLD TOKEN: " + str(old_token[0]))
             #check if old token exists
             if old_token is None:
                 #make new token
@@ -123,20 +124,6 @@ class Login(Resource):
         #return str(username) + " " + str(password)
 
 class CreateAccount(Resource):
-    #@marshal_with(user_fields)
-    def get(self):
-        return {"Error": "You're not supposed to be here."}
-
-    #@marshal_with(user_fields)
-    def put(self):
-        return 404
-
-    #@marshal_with(user_fields)
-    def patch(self):
-        return 404
-
-    def delete(self):
-        return 204
 
     def post(self):
         username = request.form.get('username')
@@ -151,6 +138,7 @@ class CreateAccount(Resource):
 api.add_resource(Login, "/login")
 api.add_resource(CreateAccount, "/createaccount")
 api.add_resource(Level, "/level")
+api.add_resource(User, "/user")
 
 if __name__ == "__main__":
     app.run(debug=True)

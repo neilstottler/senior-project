@@ -94,20 +94,39 @@ class Login(tk.Frame):
         token_text.grid(column=1, row=5)
 
 
+        #user id
+        user_id_label = Label(self, text="User ID: ")
+        user_id_label.grid(column=0, row=6)
+        user_id_text = Label(self, text="No Token")
+        user_id_text.grid(column=1, row=6)
+
+
         def login_clicked():
             username = username_box.get()
             password = password_box.get()
 
+            #get token
             response = requests.post(BASE + "login", {'username':username, 'password':password})
             print(response.json())
             token_text.configure(text=response.json())
             
             token_value = response.json()
 
+            #get userID with token
+            response2 = requests.post(BASE + "user", {'token':token_value,})
+            print(response2.json())
+            user_id_text.configure(text=response2.json())
+            
+            user_id = response2.json()
+            print("User ID: " + str(user_id[0]))
+
             #this is fucking stupid
             #WE SHOULD NOT BE DOING THIS
             f = open("token.txt", "w")
             f.write(token_value)
+
+            u = open("userid.txt", "w")
+            u.write(str(user_id[0]))
 
             print("TOKEN VALUE: " + str(token_value))
 
@@ -219,8 +238,15 @@ class SubmitData(tk.Frame):
         f = open("token.txt", "r")
         token_value = f.read()
 
+        #get the user id
+        u = open("userid.txt", "r")
+        user_id_value = u.read()
+
         token_text = Label(self, text=f"Entering data with token: {token_value}")
         token_text.grid(column=1, row=0)
+
+        user_id_text = Label(self, text=f"Entering data with user id: {user_id_value}")
+        user_id_text.grid(column=1, row=2)
 
 
 # Driver Code

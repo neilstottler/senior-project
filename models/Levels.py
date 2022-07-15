@@ -13,14 +13,14 @@ class Levels:
         self.cur.execute("""PRAGMA foreign_keys = ON;""")
 
     def create_table(self):
-        #self.cur.execute("""DROP TABLE auth""")
+        #self.cur.execute("""DROP TABLE levels""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS levels (
             id INTEGER PRIMARY KEY,
             user_id INTEGER NOT NULL,
-            platform VARCHAR(255) NOT NULL,
-            obsticles VARCHAR(255) NOT NULL,
-            powerups VARCHAR(255) NOT NULL,
-            besttree VARCHAR(255) NOT NULL,
+            platform VARCHAR(255),
+            obsticles VARCHAR(255),
+            powerups VARCHAR(255),
+            besttree VARCHAR(255),
             FOREIGN KEY(user_id) REFERENCES users(user_id)            
         )""")
 
